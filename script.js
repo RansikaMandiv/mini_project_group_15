@@ -2,62 +2,62 @@ const defaultPlants = [
     {
         name: "Curry Leaf (Karapincha)",
         scientific: "Murraya koenigii",
-        uses: "Widely used in Sri Lankan cuisine for its distinct aroma and flavor. Also used in traditional medicine for digestive issues, managing blood sugar, and hair care.",
-        tags: ["Food", "Medicine"]
+        uses: "Essential in Sri Lankan cuisine for its distinct aroma. In Ayurveda, it's used for digestion, managing cholesterol, and as a hair tonic to prevent graying.",
+        tags: ["Food", "Medicine", "Other"]
     },
     {
-        name: "Cinnamon (Kurundu)",
+        name: "Ceylon Cinnamon (Kurundu)",
         scientific: "Cinnamomum zeylanicum",
-        uses: "Sri Lanka produces the world's finest 'true cinnamon'. Used as a spice in cooking, in essential oils, and for its antioxidant and anti-inflammatory properties.",
+        uses: "The world's finest 'True Cinnamon'. Used as a spice, digestive aid, and in oils for perfumes and pharmaceuticals. Helps manage blood sugar.",
         tags: ["Food", "Medicine", "Industrial"]
     },
     {
         name: "Bael Fruit (Beli)",
         scientific: "Aegle marmelos",
-        uses: "The fruit is used to make a refreshing juice. The flowers are often brewed as a tea. It's highly valued in Ayurveda for treating gastrointestinal disorders.",
-        tags: ["Food", "Medicine"]
+        uses: "The fruit pulp makes a cooling drink, while dried flowers are brewed as tea for gastritis. Leaves are considered sacred in religious rituals.",
+        tags: ["Food", "Medicine", "Other"]
     },
     {
         name: "Neem (Kohomba)",
         scientific: "Azadirachta indica",
-        uses: "Known for its powerful antibacterial, antifungal, and antiviral properties. Used in skincare, dental hygiene, and as a natural pesticide.",
-        tags: ["Medicine", "Industrial"]
+        uses: "Known as the 'village pharmacy' for skin diseases and blood purification. Used as a natural pesticide and traditionally as a toothbrush.",
+        tags: ["Medicine", "Industrial", "Other"]
     },
     {
         name: "Gotukola",
         scientific: "Centella asiatica",
-        uses: "A common leafy green used in 'Sambol'. It's known as a 'brain food' in traditional medicine, believed to improve memory and cognitive function.",
-        tags: ["Food", "Medicine"]
+        uses: "Eaten as a salad (Sambol) to improve memory. Used in traditional medicine for skin healing and circulation, and in modern anti-aging skincare.",
+        tags: ["Food", "Medicine", "Other"]
     },
     {
         name: "Tulsi / Holy Basil (Maduruthala)",
         scientific: "Ocimum tenuiflorum",
-        uses: "Used in traditional medicine for respiratory ailments like coughs and colds. Also used for stress relief and as a natural insect repellent.",
+        uses: "Primary remedy for coughs and colds. Planted near homes to repel insects. Leaf paste is used topically for bee and wasp stings.",
         tags: ["Medicine", "Other"]
     },
     {
         name: "Turmeric (Kaha)",
         scientific: "Curcuma longa",
-        uses: "Essential spice in Sri Lankan curries. Renowned for its curcumin content which has strong anti-inflammatory and antiseptic properties.",
-        tags: ["Food", "Medicine"]
+        uses: "Used for color and flavor in curries. Acts as a powerful natural disinfectant for homes and a strong anti-inflammatory and antiseptic agent.",
+        tags: ["Food", "Medicine", "Other"]
     },
     {
         name: "Aloe Vera (Komarika)",
         scientific: "Aloe barbadensis miller",
-        uses: "Used extensively for skincare, treating burns, and as a cooling agent. The gel is also used in healthy drinks and hair treatments.",
-        tags: ["Medicine", "Ornamental"]
+        uses: "Internal gel treats gastritis and UTIs. Topically used for cooling burns and sunburns. A staple in traditional and modern hair and skin care.",
+        tags: ["Medicine", "Ornamental", "Other"]
     },
     {
         name: "Blue Pea (Katarolu)",
         scientific: "Clitoria ternatea",
-        uses: "Famous for its vibrant blue flowers used to make herbal tea and natural food coloring. Used in traditional medicine for eye health and stress.",
+        uses: "Flowers make a vibrant blue tea and natural food coloring. Valued in Ayurveda as a memory enhancer, anti-stress agent, and for postpartum care.",
         tags: ["Food", "Medicine", "Ornamental"]
     },
     {
         name: "Jackfruit (Kos)",
         scientific: "Artocarpus heterophyllus",
-        uses: "Often called 'the tree of rice' in Sri Lanka. The fruit is used as a staple food in various stages of ripeness. The wood is also highly valued for furniture.",
-        tags: ["Food", "Industrial"]
+        uses: "Known as the 'Rice Tree', a staple food in all ripeness stages. Timber is prized for furniture, and bark is used in diabetes treatments.",
+        tags: ["Food", "Medicine", "Industrial"]
     }
 ];
 
@@ -211,6 +211,40 @@ window.onclick = (event) => {
     }
 }
 
+// Tag Selection Logic
+const tagOptions = document.querySelectorAll('.tag-option');
+tagOptions.forEach(option => {
+    option.addEventListener('click', () => {
+        option.classList.toggle('selected');
+    });
+});
+
+function getSelectedTags() {
+    return Array.from(document.querySelectorAll('.tag-option.selected'))
+                .map(option => option.getAttribute('data-value'));
+}
+
+function setSelectedTags(tags) {
+    tagOptions.forEach(option => {
+        const val = option.getAttribute('data-value');
+        if (tags.includes(val)) {
+            option.classList.add('selected');
+        } else {
+            option.classList.remove('selected');
+        }
+    });
+}
+
+const discardBtn = document.getElementById('discardBtn');
+
+// Discard logic
+discardBtn.onclick = () => {
+    if (confirm('Are you sure you want to discard your changes? This will clear all fields.')) {
+        addPlantForm.reset();
+        setSelectedTags([]); // Clear tag selections
+    }
+};
+
 // Add Plant Logic
 addPlantForm.onsubmit = (e) => {
     e.preventDefault();
@@ -219,8 +253,7 @@ addPlantForm.onsubmit = (e) => {
     const scientific = document.getElementById('newScientific').value.trim();
     const uses = document.getElementById('newUses').value.trim();
     
-    const selectedTags = Array.from(addPlantForm.querySelectorAll('input[name="tags"]:checked'))
-                             .map(cb => cb.value);
+    const selectedTags = getSelectedTags();
 
     // Find if plant already exists by name or scientific name
     const existingIndex = plants.findIndex(p => 
@@ -232,7 +265,7 @@ addPlantForm.onsubmit = (e) => {
         const existingPlant = plants[existingIndex];
         const existingTags = existingPlant.tags || [];
         
-        // Check if there are actual changes (sort a copy to avoid mutating original)
+        // Check if there are actual changes
         const hasChanges = existingPlant.name !== name || 
                           existingPlant.scientific !== scientific || 
                           existingPlant.uses !== uses ||
@@ -244,6 +277,7 @@ addPlantForm.onsubmit = (e) => {
                 saveToLocalStorage();
                 addModal.style.display = "none";
                 addPlantForm.reset();
+                setSelectedTags([]); // Reset tags
                 displayPlants(plants, name);
                 
                 setTimeout(() => {
@@ -256,6 +290,7 @@ addPlantForm.onsubmit = (e) => {
             alert(`This plant (${existingPlant.name}) is already in the list with identical information!`);
             addModal.style.display = "none";
             addPlantForm.reset();
+            setSelectedTags([]); // Reset tags
             displayPlants(plants, existingPlant.name);
             
             setTimeout(() => {
@@ -273,6 +308,7 @@ addPlantForm.onsubmit = (e) => {
     
     addModal.style.display = "none";
     addPlantForm.reset();
+    setSelectedTags([]); // Reset tags
     
     displayPlants(plants, name);
     
@@ -282,6 +318,30 @@ addPlantForm.onsubmit = (e) => {
         if (highlighted) highlighted.classList.remove('highlight');
     }, 3000);
 };
+
+function updateSuggestions() {
+    if (!plantSuggestions) return;
+    plantSuggestions.innerHTML = '';
+    plants.forEach(plant => {
+        const option = document.createElement('option');
+        option.value = plant.name;
+        plantSuggestions.appendChild(option);
+    });
+}
+
+// Auto-fill logic when selecting an existing plant
+newNameInput.addEventListener('input', (e) => {
+    const selectedName = e.target.value;
+    const existingPlant = plants.find(p => p.name === selectedName);
+    
+    if (existingPlant) {
+        document.getElementById('newScientific').value = existingPlant.scientific;
+        document.getElementById('newUses').value = existingPlant.uses;
+        
+        // Update tags
+        setSelectedTags(existingPlant.tags || []);
+    }
+});
 
 // Initial state
 updateSuggestions();

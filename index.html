@@ -30,7 +30,7 @@
                 <h2>Add New Plant</h2>
                 <form id="addPlantForm">
                     <div class="form-group">
-                        <label for="newName">Common Name (e.g., Curry Leaf):</label>
+                        <label for="newName">Common Name (e.g. Curry Leaf):</label>
                         <input type="text" id="newName" list="plantSuggestions" required autocomplete="off">
                         <datalist id="plantSuggestions"></datalist>
                     </div>
@@ -44,15 +44,18 @@
                     </div>
                     <div class="form-group">
                         <label>Plant Tags (Select all that apply):</label>
-                        <div class="tag-checkboxes">
-                            <label><input type="checkbox" name="tags" value="Food"> Food</label>
-                            <label><input type="checkbox" name="tags" value="Medicine"> Medicine</label>
-                            <label><input type="checkbox" name="tags" value="Industrial"> Industrial</label>
-                            <label><input type="checkbox" name="tags" value="Ornamental"> Ornamental</label>
-                            <label><input type="checkbox" name="tags" value="Other"> Other</label>
+                        <div class="selectable-tags" id="tagSelector">
+                            <div class="tag-option" data-value="Food">Food</div>
+                            <div class="tag-option" data-value="Medicine">Medicine</div>
+                            <div class="tag-option" data-value="Industrial">Industrial</div>
+                            <div class="tag-option" data-value="Ornamental">Ornamental</div>
+                            <div class="tag-option" data-value="Other">Other</div>
                         </div>
                     </div>
-                    <button type="submit" class="primary-btn">Save Plant</button>
+                    <div class="form-actions">
+                        <button type="button" id="discardBtn" class="tertiary-btn">Discard</button>
+                        <button type="submit" class="primary-btn">Save Plant</button>
+                    </div>
                 </form>
             </div>
         </div>

@@ -223,7 +223,39 @@ header p {
     box-shadow: 0 15px 30px rgba(45, 106, 79, 0.35);
 }
 
-.primary-btn:active, .secondary-btn:active {
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.tertiary-btn {
+    background: #fff5f5;
+    color: #e03131;
+    border: 2px solid #ffa8a8;
+    flex: 0 0 auto;
+    min-width: 120px;
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tertiary-btn:hover {
+    background: #ffe3e3;
+    border-color: #ff8787;
+    transform: translateY(-5px);
+}
+
+.tertiary-btn:active {
     transform: translateY(0) scale(0.98);
 }
 
@@ -362,21 +394,61 @@ header p {
     border-color: rgba(76, 201, 240, 0.4);
 }
 
-.tag-checkboxes {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-top: 5px;
+.selectable-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 10px;
 }
 
-.tag-checkboxes label {
-    font-weight: 500;
+.tag-option {
+    padding: 10px 20px;
+    border-radius: 12px;
     font-size: 0.9rem;
+    font-weight: 600;
     cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 8px;
+    user-select: none;
+    border: 2px solid transparent;
 }
+
+/* Default state with faint colors */
+.tag-option[data-value="Food"] { background: rgba(255, 159, 28, 0.1); color: #ff9f1c; border-color: rgba(255, 159, 28, 0.2); }
+.tag-option[data-value="Medicine"] { background: rgba(208, 0, 0, 0.1); color: #d00000; border-color: rgba(208, 0, 0, 0.2); }
+.tag-option[data-value="Industrial"] { background: rgba(63, 55, 201, 0.1); color: #3f37c9; border-color: rgba(63, 55, 201, 0.2); }
+.tag-option[data-value="Ornamental"] { background: rgba(247, 37, 133, 0.1); color: #f72585; border-color: rgba(247, 37, 133, 0.2); }
+.tag-option[data-value="Other"] { background: rgba(76, 201, 240, 0.1); color: #0077b6; border-color: rgba(76, 201, 240, 0.2); }
+
+/* Glow on hover */
+.tag-option:hover {
+    transform: translateY(-3px);
+}
+.tag-option[data-value="Food"]:hover { box-shadow: 0 0 15px rgba(255, 159, 28, 0.4); border-color: #ff9f1c; }
+.tag-option[data-value="Medicine"]:hover { box-shadow: 0 0 15px rgba(208, 0, 0, 0.4); border-color: #d00000; }
+.tag-option[data-value="Industrial"]:hover { box-shadow: 0 0 15px rgba(63, 55, 201, 0.4); border-color: #3f37c9; }
+.tag-option[data-value="Ornamental"]:hover { box-shadow: 0 0 15px rgba(247, 37, 133, 0.4); border-color: #f72585; }
+.tag-option[data-value="Other"]:hover { box-shadow: 0 0 15px rgba(76, 201, 240, 0.4); border-color: #4cc9f0; }
+
+.tag-option.selected {
+    color: white !important;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.tag-option.selected::after {
+    content: '✓';
+    font-weight: 900;
+    font-size: 0.8rem;
+}
+
+/* Selected solid states */
+.tag-option[data-value="Food"].selected { background: #ff9f1c; border-color: #ff9f1c; }
+.tag-option[data-value="Medicine"].selected { background: #d00000; border-color: #d00000; }
+.tag-option[data-value="Industrial"].selected { background: #3f37c9; border-color: #3f37c9; }
+.tag-option[data-value="Ornamental"].selected { background: #f72585; border-color: #f72585; }
+.tag-option[data-value="Other"].selected { background: #4cc9f0; border-color: #4cc9f0; }
 
 .plant-card .uses-title {
     font-size: 0.8rem;
@@ -449,7 +521,7 @@ header p {
 .modal-content {
     background: white;
     margin: 5% auto;
-    padding: 50px;
+    padding: 35px 50px 50px 50px; /* Reduced top padding from 50px to 35px */
     border-radius: 40px;
     width: 90%;
     max-width: 500px;
@@ -457,6 +529,14 @@ header p {
     border: 8px solid var(--light-green);
     box-shadow: 0 30px 60px rgba(0,0,0,0.2);
     animation: modalPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.modal-content h2 {
+    margin-top: 0;
+    margin-bottom: 25px;
+    color: var(--dark-green);
+    font-weight: 900;
+    font-size: 2rem;
 }
 
 @keyframes modalPop {
@@ -480,16 +560,48 @@ header p {
     line-height: 1;
 }
 
+.form-group {
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #f0f7f4;
+}
+
+.form-group:last-of-type {
+    border-bottom: none;
+}
+
 .form-group label {
-    font-weight: 700;
-    margin-bottom: 10px;
+    font-weight: 500; /* Changed from 800 to 500 (Medium) */
+    margin-bottom: 12px;
     display: block;
+    color: var(--dark-green);
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .form-group input, .form-group textarea {
+    width: 100%;
+    padding: 18px 25px;
     background: #f8faf9;
     border: 2px solid #edf2f0;
-    border-radius: 15px;
+    border-radius: 20px;
+    font-size: 1rem;
+    color: var(--text-main);
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.form-group input:focus, .form-group textarea:focus {
+    border-color: var(--mid-green);
+    background: white;
+    box-shadow: 0 8px 20px rgba(64, 145, 108, 0.1);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 120px;
 }
 
 footer {
