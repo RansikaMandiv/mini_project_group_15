@@ -1,0 +1,252 @@
+const sriLankanPlants = [
+    {
+        name: "Curry Leaf (Karapincha)",
+        scientific: "Murraya koenigii",
+        uses: "Widely used in Sri Lankan cuisine for its distinct aroma and flavor. Also used in traditional medicine for digestive issues, managing blood sugar, and hair care."
+    },
+    {
+        name: "Cinnamon (Kurundu)",
+        scientific: "Cinnamomum zeylanicum",
+        uses: "Sri Lanka produces the world's finest 'true cinnamon'. Used as a spice in cooking, in essential oils, and for its antioxidant and anti-inflammatory properties."
+    },
+    {
+        name: "Bael Fruit (Beli)",
+        scientific: "Aegle marmelos",
+        uses: "The fruit is used to make a refreshing juice. The flowers are often brewed as a tea. It's highly valued in Ayurveda for treating gastrointestinal disorders."
+    },
+    {
+        name: "Neem (Kohomba)",
+        scientific: "Azadirachta indica",
+        uses: "Known for its powerful antibacterial, antifungal, and antiviral properties. Used in skincare, dental hygiene, and as a natural pesticide."
+    },
+    {
+        name: "Gotukola",
+        scientific: "Centella asiatica",
+        uses: "A common leafy green used in 'Sambol'. It's known as a 'brain food' in traditional medicine, believed to improve memory and cognitive function."
+    },
+    {
+        name: "Tulsi / Holy Basil (Maduruthala)",
+        scientific: "Ocimum tenuiflorum",
+        uses: "Used in traditional medicine for respiratory ailments like coughs and colds. Also used for stress relief and as a natural insect repellent."
+    },
+    {
+        name: "Turmeric (Kaha)",
+        scientific: "Curcuma longa",
+        uses: "Essential spice in Sri Lankan curries. Renowned for its curcumin content which has strong anti-inflammatory and antiseptic properties."
+    },
+    {
+        name: "Aloe Vera (Komarika)",
+        scientific: "Aloe barbadensis miller",
+        uses: "Used extensively for skincare, treating burns, and as a cooling agent. The gel is also used in healthy drinks and hair treatments."
+    },
+    {
+        name: "Blue Pea (Katarolu)",
+        scientific: "Clitoria ternatea",
+        uses: "Famous for its vibrant blue flowers used to make herbal tea and natural food coloring. Used in traditional medicine for eye health and stress."
+    },
+    {
+        name: "Jackfruit (Kos)",
+        scientific: "Artocarpus heterophyllus",
+        uses: "Often called 'the tree of rice' in Sri Lanka. The fruit is used as a staple food in various stages of ripeness. The wood is also highly valued for furniture."
+    },
+    {
+        name: "Ginger (Inguru)",
+        scientific: "Zingiber officinale",
+        uses: "A staple in Sri Lankan tea and curries. Used medicinally to treat nausea, indigestion, and to boost the immune system against colds."
+    },
+    {
+        name: "Cardamom (Enasal)",
+        scientific: "Elettaria cardamomum",
+        uses: "Known as the 'Queen of Spices'. Used to flavor sweets and savory dishes. Valued in Ayurveda for oral hygiene and digestive health."
+    },
+    {
+        name: "Black Pepper (Gammiris)",
+        scientific: "Piper nigrum",
+        uses: "Sri Lanka produces high-piperine pepper. Used as a warming spice and in traditional medicine to treat respiratory congestion and boost metabolism."
+    },
+    {
+        name: "Clove (Karabu Nati)",
+        scientific: "Syzygium aromaticum",
+        uses: "Intensely aromatic. Used in spice blends and traditionally chewed to relieve toothaches due to its natural numbing properties."
+    },
+    {
+        name: "Nutmeg (Sadikka)",
+        scientific: "Myristica fragrans",
+        uses: "Used to flavor cakes and curries. Medicinally used as a mild sedative to improve sleep and for joint pain relief."
+    },
+    {
+        name: "Ironwood (Na)",
+        scientific: "Mesua ferrea",
+        uses: "The national tree of Sri Lanka. The flowers are used in herbal medicines for bleeding disorders and as a fragrance in cosmetics."
+    },
+    {
+        name: "Indian Gooseberry (Nelli)",
+        scientific: "Phyllanthus emblica",
+        uses: "Extremely high in Vitamin C. A key ingredient in 'Triphala'. Used for boosting immunity, hair growth, and detoxifying the liver."
+    },
+    {
+        name: "Wood Apple (Divul)",
+        scientific: "Limonia acidissima",
+        uses: "Popular for making fruit juices and jams. Traditionally used to treat gum diseases and gastrointestinal ailments."
+    },
+    {
+        name: "Drumstick Tree (Murunga)",
+        scientific: "Moringa oleifera",
+        uses: "A 'superfood' where pods and leaves are eaten. Used to manage blood pressure and highly valued for its high protein and iron content."
+    },
+    {
+        name: "Hathawariya",
+        scientific: "Asparagus racemosus",
+        uses: "Commonly used in herbal porridge (Kanda). Known as a tonic for reproductive health and to balance hormone levels in Ayurveda."
+    },
+    {
+        name: "Iramusu",
+        scientific: "Hemidesmus indicus",
+        uses: "Used to make a refreshing herbal tea that cools the body. Known as a blood purifier and used for skin health and urinary issues."
+    },
+    {
+        name: "Water Spinach (Kankun)",
+        scientific: "Ipomoea aquatica",
+        uses: "A popular leafy vegetable. Rich in iron and fiber; traditionally used as a mild sedative and for its cooling properties."
+    },
+    {
+        name: "Mukunuwenna",
+        scientific: "Alternanthera sessilis",
+        uses: "One of the most common leafy greens in Sri Lanka. Consumed to improve eyesight and as a nutritious part of a daily diet."
+    },
+    {
+        name: "Kumbuk",
+        scientific: "Terminalia arjuna",
+        uses: "The bark is widely used in Ayurveda for heart health. Often found near water sources where it helps purify the water."
+    },
+    {
+        name: "Sandalwood (Handun)",
+        scientific: "Santalum album",
+        uses: "Prized for its fragrant wood. Used in skincare for cooling and brightening the skin, and in religious incense and oils."
+    },
+    {
+        name: "Red Sandalwood (Rath Handun)",
+        scientific: "Pterocarpus santalinus",
+        uses: "Primarily used in medicinal pastes for skin inflammation, treating scars, and reducing body heat."
+    },
+    {
+        name: "Gamboge (Goraka)",
+        scientific: "Garcinia quaesita",
+        uses: "Unique to the region, it's used as a souring agent in fish curries. It is also used in traditional medicine for weight management."
+    },
+    {
+        name: "Pawatta",
+        scientific: "Adhatoda vasica",
+        uses: "Famous for treating respiratory issues. The leaves are brewed into a decoction for asthma, bronchitis, and cough relief."
+    },
+    {
+        name: "Nika",
+        scientific: "Vitex negundo",
+        uses: "Leaves are used in herbal steam baths and inhalation to treat sinus issues, headaches, and joint pain."
+    },
+    {
+        name: "King Coconut (Thambili)",
+        scientific: "Cocos nucifera var. aurantiaca",
+        uses: "The orange coconut unique to Sri Lanka. Its water is a natural electrolyte used for rehydration and cooling the body."
+    },
+    {
+        name: "Betel Leaf (Bulath)",
+        scientific: "Piper betle",
+        uses: "Culturally significant for ceremonies. Chewed as a digestive aid and used in traditional medicine for its antiseptic properties."
+    },
+    {
+        name: "Areca Nut (Puwak)",
+        scientific: "Areca catechu",
+        uses: "Used along with betel leaves. In Ayurveda, it is used for its astringent properties and to help treat intestinal parasites."
+    },
+    {
+        name: "Soursop (Anoda)",
+        scientific: "Annona muricata",
+        uses: "The fruit is used for juices. Traditionally used to treat inflammation and researched for its potential anti-cancer properties."
+    },
+    {
+        name: "Screw Pine (Rampe)",
+        scientific: "Pandanus amaryllifolius",
+        uses: "Used to add a distinct aroma to rice and curries. It also has cooling properties and is used to treat skin conditions."
+    },
+    {
+        name: "Lemongrass (Sera)",
+        scientific: "Cymbopogon citratus",
+        uses: "Adds a citrus flavor to curries. The oil is used as a natural mosquito repellent and to relieve muscle aches."
+    },
+    {
+        name: "Avaram Senna (Ranawara)",
+        scientific: "Senna auricula",
+        uses: "The flowers are dried and brewed as a popular caffeine-free tea. Used for controlling blood sugar and improving skin complexion."
+    },
+    {
+        name: "Breadfruit (Del)",
+        scientific: "Artocarpus altilis",
+        uses: "A starchy staple vegetable. The latex of the tree is traditionally used to heal minor skin scratches and wounds."
+    },
+    {
+        name: "Devil's Backbone (Hiressa)",
+        scientific: "Cissus quadrangularis",
+        uses: "Used in traditional medicine to accelerate the healing of bone fractures and for its anti-inflammatory effects on joints."
+    },
+    {
+        name: "Spanish Cherry (Munamal)",
+        scientific: "Mimusops elengi",
+        uses: "The bark and flowers are used to strengthen gums and teeth. The fragrant flowers are used in aromatherapy."
+    },
+    {
+        name: "Long Pepper (Thippili)",
+        scientific: "Piper longum",
+        uses: "A key ingredient in many Ayurvedic tonics. Used to treat chronic coughs, asthma, and digestive sluggishness."
+    },
+    {
+        name: "Guava (Pera)",
+        scientific: "Psidium guajava",
+        uses: "Rich in vitamins. The young leaves are often chewed or brewed as a tea to treat diarrhea and oral infections."
+    },
+    {
+        name: "Star Fruit (Kamaranka)",
+        scientific: "Averrhoa carambola",
+        uses: "Used in salads and juices. Traditionally used to reduce fever and as a diuretic to treat skin conditions."
+    },
+    {
+        name: "Passion Fruit",
+        scientific: "Passiflora edulis",
+        uses: "Cultivated for its tart juice. The leaves are used in traditional medicine as a sedative to treat insomnia and anxiety."
+    },
+    {
+        name: "Beli Mull (Bael Root)",
+        scientific: "Aegle marmelos (Root)",
+        uses: "One of the 'Dashamoola' (ten roots) in Ayurveda. Specifically used for treating inflammatory conditions and bowel disorders."
+    },
+    {
+        name: "Castor Oil Plant (Endaru)",
+        scientific: "Ricinus communis",
+        uses: "The oil is a potent laxative and hair treatment. Leaves are used as a topical compress to reduce localized heat and pain."
+    },
+    {
+        name: "Wel Penela",
+        scientific: "Cardiospermum halicacabum",
+        uses: "Used in herbal porridge (Kanda). Believed to improve joint mobility and used in the treatment of nerve disorders."
+    },
+    {
+        name: "Katuwelbatu",
+        scientific: "Solanum virginianum",
+        uses: "Widely used in Ayurveda for respiratory ailments like asthma and chronic coughs. It is an essential ingredient in Paspanguwa."
+    },
+    {
+        name: "Kothala Himbutu",
+        scientific: "Salacia reticulata",
+        uses: "Native to Sri Lanka. Historically used by kings to drink water from vessels made of this wood to manage diabetes."
+    },
+    {
+        name: "Binara",
+        scientific: "Exacum trinervium",
+        uses: "Endemic to Sri Lanka. While primarily known for its beautiful blue flowers, it is used in traditional medicine for skin diseases."
+    },
+    {
+        name: "Kohila",
+        scientific: "Lasia spinosa",
+        uses: "A fibrous marshy plant. Highly recommended in Sri Lanka for digestive health and specifically for treating hemorrhoids."
+    }
+];
