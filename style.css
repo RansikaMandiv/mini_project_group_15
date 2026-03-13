@@ -26,6 +26,10 @@ body {
     position: relative;
 }
 
+body.modal-open {
+    overflow: hidden;
+}
+
 /* Hide scrollbar slider but keep functionality */
 html {
     scrollbar-width: none; /* Firefox */
@@ -516,15 +520,16 @@ header p {
     background: rgba(27, 67, 50, 0.3);
     backdrop-filter: blur(15px);
     animation: fadeIn 0.3s ease;
+    justify-content: center;
+    align-items: center;
 }
 
 .modal-content {
     background: white;
-    margin: 5% auto;
-    padding: 35px 50px 50px 50px; /* Reduced top padding from 50px to 35px */
+    padding: 20px 30px;
     border-radius: 40px;
     width: 90%;
-    max-width: 500px;
+    max-width: 400px;
     position: relative;
     border: 8px solid var(--light-green);
     box-shadow: 0 30px 60px rgba(0,0,0,0.2);
@@ -533,15 +538,15 @@ header p {
 
 .modal-content h2 {
     margin-top: 0;
-    margin-bottom: 25px;
+    margin-bottom: 15px;
     color: var(--dark-green);
     font-weight: 900;
-    font-size: 2rem;
+    font-size: 1.6rem;
 }
 
 @keyframes modalPop {
-    from { transform: scale(0.8) translateY(50px); opacity: 0; }
-    to { transform: scale(1) translateY(0); opacity: 1; }
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
 }
 
 @keyframes fadeIn {
@@ -551,9 +556,9 @@ header p {
 
 .close {
     position: absolute;
-    right: 30px;
-    top: 25px;
-    font-size: 35px;
+    right: 25px;
+    top: 20px;
+    font-size: 30px;
     font-weight: bold;
     color: var(--text-muted);
     cursor: pointer;
@@ -561,8 +566,8 @@ header p {
 }
 
 .form-group {
-    margin-bottom: 25px;
-    padding-bottom: 20px;
+    margin-bottom: 15px;
+    padding-bottom: 12px;
     border-bottom: 1px solid #f0f7f4;
 }
 
@@ -571,22 +576,22 @@ header p {
 }
 
 .form-group label {
-    font-weight: 500; /* Changed from 800 to 500 (Medium) */
-    margin-bottom: 12px;
+    font-weight: 500;
+    margin-bottom: 8px;
     display: block;
     color: var(--dark-green);
-    font-size: 0.95rem;
+    font-size: 0.85rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
 .form-group input, .form-group textarea {
     width: 100%;
-    padding: 18px 25px;
+    padding: 12px 20px;
     background: #f8faf9;
     border: 2px solid #edf2f0;
-    border-radius: 20px;
-    font-size: 1rem;
+    border-radius: 15px;
+    font-size: 0.95rem;
     color: var(--text-main);
     box-sizing: border-box;
     transition: all 0.3s ease;
@@ -601,7 +606,7 @@ header p {
 
 .form-group textarea {
     resize: vertical;
-    min-height: 120px;
+    min-height: 80px;
 }
 
 footer {

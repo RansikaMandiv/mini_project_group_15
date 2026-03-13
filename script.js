@@ -199,14 +199,19 @@ searchInput.addEventListener('input', () => {
 });
 
 // Modal logic
-addPlantBtn.onclick = () => addModal.style.display = "block";
+addPlantBtn.onclick = () => {
+    addModal.style.display = "flex";
+    document.body.classList.add('modal-open');
+};
 closeModal.onclick = () => {
     addModal.style.display = "none";
+    document.body.classList.remove('modal-open');
     addPlantForm.reset();
 };
 window.onclick = (event) => {
     if (event.target == addModal) {
         addModal.style.display = "none";
+        document.body.classList.remove('modal-open');
         addPlantForm.reset();
     }
 }
@@ -276,6 +281,7 @@ addPlantForm.onsubmit = (e) => {
                 plants[existingIndex] = { name, scientific, uses, tags: selectedTags };
                 saveToLocalStorage();
                 addModal.style.display = "none";
+                document.body.classList.remove('modal-open');
                 addPlantForm.reset();
                 setSelectedTags([]); // Reset tags
                 displayPlants(plants, name);
@@ -289,6 +295,7 @@ addPlantForm.onsubmit = (e) => {
         } else {
             alert(`This plant (${existingPlant.name}) is already in the list with identical information!`);
             addModal.style.display = "none";
+            document.body.classList.remove('modal-open');
             addPlantForm.reset();
             setSelectedTags([]); // Reset tags
             displayPlants(plants, existingPlant.name);
@@ -307,6 +314,7 @@ addPlantForm.onsubmit = (e) => {
     saveToLocalStorage();
     
     addModal.style.display = "none";
+    document.body.classList.remove('modal-open');
     addPlantForm.reset();
     setSelectedTags([]); // Reset tags
     
