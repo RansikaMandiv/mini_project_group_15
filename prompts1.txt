@@ -24,3 +24,4 @@
 24. smooth out the transition
 25. change the alignment of add new to previous location and smooth out the transition when using hide all
 26. add all used prompts in this session to a prompts1.txt file
+27.give a short and unique creative description for this webpage
