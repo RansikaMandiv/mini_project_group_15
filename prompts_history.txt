@@ -1,0 +1,13 @@
+1. create a web application using html , css and javascript to search tool for Sri Lankan plants with scientific names and uses the application must run locally on your computer avoid using AI APIs or external servicesKeep the application small but functional
+2. create a functional button to someone can add more to the list, if it is already added show the details about that plant.
+3. when some one is try to update list show suggetions from already added plants
+4. make this web site looks attractive and simple
+5. don't show the list
+6. create a button to go tothe list
+7. once some one click view all button show the list and button name change to hide all then some one clickthat button hide the list
+8. add some nature friendlly decos for the web page make it more attractive
+9. fit this into any device auto matically
+10. make this more cool and attractive by adding some nature friendly arts or whatever
+11. minimize the button sizes not the fonts and make functional view all button like previous
+12. make view button functional like previous
+13. create a .txt file with all prompts i used in this project
