@@ -61,14 +61,19 @@ const defaultPlants = [
     }
 ];
 
-// Load plants from localStorage or use defaults
+// Load plants and pending requests from localStorage or use defaults
 let plants = JSON.parse(localStorage.getItem('sl_plants')) || defaultPlants;
+let pendingPlants = JSON.parse(localStorage.getItem('sl_pending_plants')) || [];
+let isAdmin = false;
 
 const searchInput = document.getElementById('searchInput');
 const plantsContainer = document.getElementById('plantsContainer');
 const addModal = document.getElementById('addModal');
 const addPlantBtn = document.getElementById('addPlantBtn');
 const viewAllBtn = document.getElementById('viewAllBtn');
+const adminLoginBtn = document.getElementById('adminLoginBtn');
+const adminPanel = document.getElementById('adminPanel');
+const logoutBtn = document.getElementById('logoutBtn');
 const closeModal = document.querySelector('.close');
 const addPlantForm = document.getElementById('addPlantForm');
 const plantSuggestions = document.getElementById('plantSuggestions');
@@ -77,8 +82,159 @@ const mainContainer = document.querySelector('.container');
 
 function saveToLocalStorage() {
     localStorage.setItem('sl_plants', JSON.stringify(plants));
+    localStorage.setItem('sl_pending_plants', JSON.stringify(pendingPlants));
     updateSuggestions();
+    updateAdminUI();
 }
+
+// Role Management
+adminLoginBtn.onclick = () => {
+    const password = prompt("Enter Admin Password:");
+    if (password === null) return; // User clicked Cancel
+    
+    if (password === "admin123") {
+        isAdmin = true;
+        adminPanel.style.display = "block";
+        adminLoginBtn.style.display = "none";
+        updateAdminUI();
+        alert("Logged in as Admin");
+    } else {
+        alert("Incorrect password!");
+    }
+};
+
+logoutBtn.onclick = () => {
+    isAdmin = false;
+    adminPanel.style.display = "none";
+    adminLoginBtn.style.display = "block";
+    alert("Logged out from Admin Portal");
+};
+
+// Tab Logic
+const tabBtns = document.querySelectorAll('.tab-btn');
+const tabContents = document.querySelectorAll('.tab-content');
+
+tabBtns.forEach(btn => {
+    btn.onclick = () => {
+        const tabId = btn.getAttribute('data-tab');
+        tabBtns.forEach(b => b.classList.remove('active'));
+        tabContents.forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(tabId + 'Tab').classList.add('active');
+    };
+});
+
+function updateAdminUI() {
+    if (!isAdmin) return;
+
+    // Update Pending Tab
+    const pendingContainer = document.getElementById('pendingContainer');
+    const pendingCount = document.getElementById('pendingCount');
+    pendingCount.innerText = pendingPlants.length;
+    
+    pendingContainer.innerHTML = '';
+    if (pendingPlants.length === 0) {
+        pendingContainer.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted);">No pending requests.</p>';
+    } else {
+        pendingPlants.forEach((plant, index) => {
+            const card = document.createElement('div');
+            card.className = 'request-card';
+            card.innerHTML = `
+                <h3>${plant.name}</h3>
+                <p><strong>Scientific:</strong> ${plant.scientific}</p>
+                <p><strong>Uses:</strong> ${plant.uses}</p>
+                <div class="request-actions">
+                    <button class="approve-btn" onclick="approveRequest(${index})">Approve</button>
+                    <button class="reject-btn" onclick="rejectRequest(${index})">Reject</button>
+                </div>
+            `;
+            pendingContainer.appendChild(card);
+        });
+    }
+
+    // Update Manage Tab
+    const manageContainer = document.getElementById('manageContainer');
+    manageContainer.innerHTML = '';
+    plants.forEach((plant, index) => {
+        const item = document.createElement('div');
+        item.className = 'manage-item';
+        item.innerHTML = `
+            <span><strong>${plant.name}</strong> (${plant.scientific})</span>
+            <button class="delete-btn" onclick="deletePlant(${index})">Delete</button>
+        `;
+        manageContainer.appendChild(item);
+    });
+}
+
+window.approveRequest = (index) => {
+    const plant = pendingPlants[index];
+    plants.push(plant);
+    pendingPlants.splice(index, 1);
+    saveToLocalStorage();
+    displayPlants(plants);
+    alert(`${plant.name} approved and added to database.`);
+};
+
+window.rejectRequest = (index) => {
+    if (confirm("Are you sure you want to reject this request?")) {
+        pendingPlants.splice(index, 1);
+        saveToLocalStorage();
+    }
+};
+
+window.deletePlant = (index) => {
+    if (confirm(`Are you sure you want to delete ${plants[index].name}?`)) {
+        plants.splice(index, 1);
+        saveToLocalStorage();
+        displayPlants(plants);
+    }
+};
+
+// Add Plant Logic
+addPlantForm.onsubmit = (e) => {
+    e.preventDefault();
+    
+    const name = document.getElementById('newName').value.trim();
+    const scientific = document.getElementById('newScientific').value.trim();
+    const uses = document.getElementById('newUses').value.trim();
+    const selectedTags = getSelectedTags();
+
+    // Check if plant already exists in main database
+    const existingIndex = plants.findIndex(p => 
+        p.name.toLowerCase() === name.toLowerCase() || 
+        p.scientific.toLowerCase() === scientific.toLowerCase()
+    );
+
+    const newPlant = { name, scientific, uses, tags: selectedTags };
+
+    if (isAdmin) {
+        if (existingIndex !== -1) {
+            if (confirm(`A plant with this name already exists. Do you want to update its information?`)) {
+                plants[existingIndex] = newPlant;
+                saveToLocalStorage();
+                displayPlants(plants, name);
+                alert("Plant information updated by Admin.");
+            } else {
+                return;
+            }
+        } else {
+            plants.push(newPlant);
+            saveToLocalStorage();
+            displayPlants(plants, name);
+            alert("New plant added directly by Admin.");
+        }
+    } else {
+        // Guest submission
+        pendingPlants.push(newPlant);
+        saveToLocalStorage();
+        alert("Thank you! Your suggestion has been sent to the Admin for approval. 🌱");
+    }
+    
+    addModal.style.display = "none";
+    document.body.classList.remove('modal-open');
+    addPlantForm.reset();
+    setSelectedTags([]);
+};
 
 function clearPlants(callback) {
     const cards = plantsContainer.querySelectorAll('.plant-card, .no-results');
@@ -248,83 +404,6 @@ discardBtn.onclick = () => {
         addPlantForm.reset();
         setSelectedTags([]); // Clear tag selections
     }
-};
-
-// Add Plant Logic
-addPlantForm.onsubmit = (e) => {
-    e.preventDefault();
-    
-    const name = document.getElementById('newName').value.trim();
-    const scientific = document.getElementById('newScientific').value.trim();
-    const uses = document.getElementById('newUses').value.trim();
-    
-    const selectedTags = getSelectedTags();
-
-    // Find if plant already exists by name or scientific name
-    const existingIndex = plants.findIndex(p => 
-        p.name.toLowerCase() === name.toLowerCase() || 
-        p.scientific.toLowerCase() === scientific.toLowerCase()
-    );
-
-    if (existingIndex !== -1) {
-        const existingPlant = plants[existingIndex];
-        const existingTags = existingPlant.tags || [];
-        
-        // Check if there are actual changes
-        const hasChanges = existingPlant.name !== name || 
-                          existingPlant.scientific !== scientific || 
-                          existingPlant.uses !== uses ||
-                          JSON.stringify([...existingTags].sort()) !== JSON.stringify([...selectedTags].sort());
-
-        if (hasChanges) {
-            if (confirm(`A plant with this name or scientific name already exists. Do you want to update its information with your changes?`)) {
-                plants[existingIndex] = { name, scientific, uses, tags: selectedTags };
-                saveToLocalStorage();
-                addModal.style.display = "none";
-                document.body.classList.remove('modal-open');
-                addPlantForm.reset();
-                setSelectedTags([]); // Reset tags
-                displayPlants(plants, name);
-                
-                setTimeout(() => {
-                    const highlighted = document.querySelector('.highlight');
-                    if (highlighted) highlighted.classList.remove('highlight');
-                }, 3000);
-            }
-            return;
-        } else {
-            alert(`This plant (${existingPlant.name}) is already in the list with identical information!`);
-            addModal.style.display = "none";
-            document.body.classList.remove('modal-open');
-            addPlantForm.reset();
-            setSelectedTags([]); // Reset tags
-            displayPlants(plants, existingPlant.name);
-            
-            setTimeout(() => {
-                const highlighted = document.querySelector('.highlight');
-                if (highlighted) highlighted.classList.remove('highlight');
-            }, 3000);
-            return;
-        }
-    }
-
-    // Add new plant
-    const newPlant = { name, scientific, uses, tags: selectedTags };
-    plants.push(newPlant);
-    saveToLocalStorage();
-    
-    addModal.style.display = "none";
-    document.body.classList.remove('modal-open');
-    addPlantForm.reset();
-    setSelectedTags([]); // Reset tags
-    
-    displayPlants(plants, name);
-    
-    // Remove highlight after 3 seconds
-    setTimeout(() => {
-        const highlighted = document.querySelector('.highlight');
-        if (highlighted) highlighted.classList.remove('highlight');
-    }, 3000);
 };
 
 function updateSuggestions() {

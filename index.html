@@ -8,6 +8,14 @@
 </head>
 <body>
     <div class="container hero-mode">
+        <button id="adminLoginBtn" class="admin-profile-btn" title="Admin Portal">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span>Admin</span>
+        </button>
+
         <header>
             <h1>Sri Lankan Plant Finder</h1>
             <p>Search for native plants by name or scientific name.</p>
@@ -22,6 +30,31 @@
         <p class="search-description">
             A calm digital gateway to Sri Lanka’s rich plant life 🌿. The Sri Lankan Plant Finder makes discovering native plants simple-just type a name and instantly explore local flora. With a clean design and easy search, it turns botanical curiosity into a smooth and enjoyable journey for students, nature lovers, and researchers alike. 🌱
         </p>
+
+        <!-- Admin Panel -->
+        <div id="adminPanel" class="admin-panel" style="display: none;">
+            <div class="admin-header">
+                <h2>Admin Dashboard</h2>
+                <button id="logoutBtn" class="secondary-btn">Exit Admin</button>
+            </div>
+            
+            <div class="admin-tabs">
+                <button class="tab-btn active" data-tab="pending">Pending Requests (<span id="pendingCount">0</span>)</button>
+                <button class="tab-btn" data-tab="manage">Manage Database</button>
+            </div>
+
+            <div id="pendingTab" class="tab-content active">
+                <div id="pendingContainer" class="admin-requests-grid">
+                    <!-- Pending requests will be injected here -->
+                </div>
+            </div>
+
+            <div id="manageTab" class="tab-content">
+                <div id="manageContainer" class="admin-manage-list">
+                    <!-- Existing plants with delete buttons will be injected here -->
+                </div>
+            </div>
+        </div>
 
         <!-- Add Plant Modal -->
         <div id="addModal" class="modal">
