@@ -26,6 +26,16 @@ body {
     position: relative;
 }
 
+/* Hide scrollbar slider but keep functionality */
+html {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+}
+
+::-webkit-scrollbar {
+    display: none; /* Chrome/Safari/Opera */
+}
+
 /* Background Decorations */
 body::before, body::after {
     content: '🌿';
@@ -60,11 +70,31 @@ body::after {
     margin: 0 auto;
     padding: 60px 15px;
     position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    /* Use a more sophisticated ease for ultra-smooth movement */
+    transition: padding 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
+                justify-content 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Initial state: Centered Hero */
+.container.hero-mode {
+    justify-content: center;
+    padding-bottom: 15vh;
 }
 
 header {
     text-align: center;
     margin-bottom: 60px;
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform, margin-bottom;
+}
+
+.container:not(.hero-mode) header {
+    margin-bottom: 30px;
+    transform: scale(0.8);
+    transform-origin: center top;
 }
 
 header h1 {
@@ -89,18 +119,30 @@ header p {
 .search-section {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
     gap: 15px;
-    margin-bottom: 60px;
+    margin: 0 auto 60px auto;
     background: var(--glass-bg);
     padding: 20px;
     border-radius: 30px;
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255,255,255,0.5);
     box-shadow: var(--card-shadow);
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 100%;
+    max-width: 900px;
+    box-sizing: border-box;
+    will-change: padding, margin-bottom;
+}
+
+.container:not(.hero-mode) .search-section {
+    margin-bottom: 40px;
+    padding: 15px;
 }
 
 #searchInput {
-    flex: 2;
+    flex: 1;
     min-width: 250px;
     padding: 18px 25px;
     font-size: 1.1rem;
@@ -118,7 +160,7 @@ header p {
 }
 
 .primary-btn, .secondary-btn {
-    flex: 0 1 auto;
+    flex: 0 0 auto;
     min-width: 120px;
     padding: 10px 20px;
     font-size: 0.9rem;
@@ -139,22 +181,24 @@ header p {
     background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
     color: white;
     box-shadow: 0 10px 20px rgba(45, 106, 79, 0.25);
-}
-
-.primary-btn:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 30px rgba(45, 106, 79, 0.35);
+    order: 3; /* Always last (right) */
 }
 
 .secondary-btn {
     background: white;
     color: var(--primary-green);
     border: 2px solid var(--primary-green);
+    order: 2; /* Middle */
 }
 
 .secondary-btn:hover {
     background: var(--light-green);
     transform: translateY(-5px);
+}
+
+.primary-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(45, 106, 79, 0.35);
 }
 
 .primary-btn:active, .secondary-btn:active {
@@ -166,6 +210,42 @@ header p {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 30px;
+    justify-content: center;
+    align-items: start;
+    min-height: 200px;
+}
+
+.no-results {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px;
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    background: var(--glass-bg);
+    border-radius: var(--border-radius);
+    animation: cardEntrance 0.5s ease both;
+}
+
+@keyframes cardEntrance {
+    from { 
+        opacity: 0; 
+        transform: translateY(20px) scale(0.98); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0) scale(1); 
+    }
+}
+
+@keyframes cardExit {
+    from { 
+        opacity: 1; 
+        transform: translateY(0) scale(1); 
+    }
+    to { 
+        opacity: 0; 
+        transform: translateY(10px) scale(0.98); 
+    }
 }
 
 .plant-card {
@@ -178,6 +258,11 @@ header p {
     transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
     position: relative;
     overflow: hidden;
+    animation: cardEntrance 0.5s cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+.plant-card.exit {
+    animation: cardExit 0.3s ease-in forwards;
 }
 
 .plant-card::before {
@@ -212,14 +297,69 @@ header p {
     border-radius: 12px;
     font-weight: 700;
     font-size: 0.9rem;
-    margin-bottom: 25px;
+    margin-bottom: 10px;
     font-style: italic;
+}
+
+.tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 25px;
+}
+
+.tag-badge {
+    padding: 5px 11px;
+    border-radius: 10px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #444;
+    border: 1.5px solid transparent;
+}
+
+.tag-badge.food { 
+    background: rgba(255, 159, 28, 0.12); 
+    border-color: rgba(255, 159, 28, 0.3);
+}
+.tag-badge.medicine { 
+    background: rgba(208, 0, 0, 0.08); 
+    border-color: rgba(208, 0, 0, 0.25);
+}
+.tag-badge.industrial { 
+    background: rgba(63, 55, 201, 0.08); 
+    border-color: rgba(63, 55, 201, 0.25);
+}
+.tag-badge.ornamental { 
+    background: rgba(247, 37, 133, 0.08); 
+    border-color: rgba(247, 37, 133, 0.25);
+}
+.tag-badge.other { 
+    background: rgba(76, 201, 240, 0.15); 
+    border-color: rgba(76, 201, 240, 0.4);
+}
+
+.tag-checkboxes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.tag-checkboxes label {
+    font-weight: 500;
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
 
 .plant-card .uses-title {
     font-size: 0.8rem;
-    font-weight: 900;
-    color: var(--accent-orange);
+    font-weight: 500;
+    color: #000000;
     text-transform: uppercase;
     letter-spacing: 1.5px;
     margin-bottom: 12px;
@@ -235,10 +375,39 @@ header p {
     background: var(--light-green);
 }
 
+.expand-btn {
+    background: none;
+    border: none;
+    color: var(--mid-green);
+    font-size: 0.75rem;
+    font-weight: 800;
+    cursor: pointer;
+    padding: 5px 0;
+    text-transform: uppercase;
+    display: block;
+    margin-left: auto;
+    transition: all 0.3s ease;
+}
+
+.expand-btn:hover {
+    color: var(--dark-green);
+    transform: translateX(2px);
+}
+
 .plant-card .uses-content {
     font-size: 1.05rem;
     line-height: 1.7;
     color: var(--text-main);
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    transition: all 0.5s ease-in-out;
+}
+
+.plant-card .uses-content.expanded {
+    -webkit-line-clamp: unset;
+    overflow: visible;
 }
 
 /* Modal Styling */

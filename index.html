@@ -7,14 +7,14 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
+    <div class="container hero-mode">
         <header>
             <h1>Sri Lankan Plant Finder</h1>
-            <p>Search for native plants by name, scientific name, or uses.</p>
+            <p>Search for native plants by name or scientific name.</p>
         </header>
 
         <section class="search-section">
-            <input type="text" id="searchInput" placeholder="Search (e.g., 'Karapincha', 'Medicinal', 'Curry')..." autocomplete="off">
+            <input type="text" id="searchInput" placeholder="Search (e.g., 'Karapincha', 'Murraya')..." autocomplete="off">
             <button id="viewAllBtn" class="secondary-btn">View All</button>
             <button id="addPlantBtn" class="primary-btn">Add New</button>
         </section>
@@ -37,6 +37,16 @@
                     <div class="form-group">
                         <label for="newUses">Primary Uses:</label>
                         <textarea id="newUses" rows="4" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Plant Tags (Select all that apply):</label>
+                        <div class="tag-checkboxes">
+                            <label><input type="checkbox" name="tags" value="Food"> Food</label>
+                            <label><input type="checkbox" name="tags" value="Medicine"> Medicine</label>
+                            <label><input type="checkbox" name="tags" value="Industrial"> Industrial</label>
+                            <label><input type="checkbox" name="tags" value="Ornamental"> Ornamental</label>
+                            <label><input type="checkbox" name="tags" value="Other"> Other</label>
+                        </div>
                     </div>
                     <button type="submit" class="primary-btn">Save Plant</button>
                 </form>

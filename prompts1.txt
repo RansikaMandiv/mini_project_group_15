@@ -1,0 +1,26 @@
+1. when a user search for a specific plant it must be filtered from available plant database using only the name and scientific names
+2. add a tag near the scientific name in different colors according to use case like (Food,Mdicine,etc..) and allow users to add tags when they add new plants to the database
+3. when user tries to add a currently added medicine if there are edits in it allow it
+4. save changes button wont work when adding new plants
+5. use transparent color tags
+6. change the color of text inside the plant tags to a lighter dark gray
+7. add unique colors to different colors
+8. for every plants the primary uses para should be limited to 5 lines and to expand full paragraph add a drop dowm left alligned to primary uses linefor every plants the primary uses para should be limited to 5 lines and to expand full paragraph add a drop down right alligned to primary uses line
+9. add the read more button after ther the end of para
+10. change the primary "uses" topics color to a matching color in the designchange the "Primary uses" topics color to a matching color in the design
+11. use black instead of that color
+12. change bold to font weight medium
+13. reverse the previous change and change font weight to medium only for the "Primary uses"
+14. add fade in animation to smooth out opening and closing
+15. add the same transition when hiding all panels too
+16. change font weight inside tags to regular
+17. change it to medium
+18. alignment of the items in the page gets disaligned when the transition takes place
+19. hide the scroll bar slider
+20. change the websites hero section to be centrally aligned
+21. revert the previous change
+22. change the alignment of the main pages elements to middle align
+23. revert the previous change and when the website loads srilankan plant finder and search bar with all elements should be middle aligned and when a user clicks view all element should transition to top to give place to the content
+24. smooth out the transition
+25. change the alignment of add new to previous location and smooth out the transition when using hide all
+26. add all used prompts in this session to a prompts1.txt file
