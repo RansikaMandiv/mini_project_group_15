@@ -81,7 +81,7 @@ body::after {
 /* Initial state: Centered Hero */
 .container.hero-mode {
     justify-content: center;
-    padding-bottom: 15vh;
+    padding-bottom: 5vh; /* Reduced from 15vh to let it sit lower/more centered */
 }
 
 header {
@@ -139,6 +139,28 @@ header p {
 .container:not(.hero-mode) .search-section {
     margin-bottom: 40px;
     padding: 15px;
+}
+
+.search-description {
+    max-width: 800px;
+    margin: 20px auto 60px auto; /* Changed from -30px to positive 20px */
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 1.15rem;
+    line-height: 1.8; /* Slightly more breathing room */
+    font-weight: 500;
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.container:not(.hero-mode) .search-description {
+    opacity: 0;
+    transform: translateY(-10px);
+    margin: 0 auto;
+    height: 0;
+    overflow: hidden;
+    pointer-events: none;
 }
 
 #searchInput {
