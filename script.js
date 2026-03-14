@@ -209,13 +209,28 @@ function updateAdminUI() {
 }
 
 window.approveRequest = (index) => {
-    const plant = pendingPlants[index];
-    if (!plant) return;
-    plants.push(plant);
+    const newPlant = pendingPlants[index];
+    if (!newPlant) return;
+
+    // Check if it already exists in the main database
+    const existingIndex = plants.findIndex(p => 
+        p && (p.name.toLowerCase() === newPlant.name.toLowerCase() || 
+        p.scientific.toLowerCase() === newPlant.scientific.toLowerCase())
+    );
+
+    if (existingIndex !== -1) {
+        // Update existing plant
+        plants[existingIndex] = newPlant;
+        showToast(`${newPlant.name} information updated in database.`, "success");
+    } else {
+        // Add as new plant
+        plants.push(newPlant);
+        showToast(`${newPlant.name} approved and added to database.`, "success");
+    }
+
     pendingPlants.splice(index, 1);
     saveToLocalStorage();
     displayPlants(plants);
-    showToast(`${plant.name} approved and added to database.`, "success");
 };
 
 window.rejectRequest = (index) => {
