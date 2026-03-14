@@ -195,19 +195,20 @@ header p {
     text-transform: uppercase;
     letter-spacing: 1px;
     border-radius: 15px;
-    border: none;
     cursor: pointer;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
+    box-sizing: border-box;
 }
 
 .primary-btn {
     background: linear-gradient(135deg, var(--primary-green), var(--mid-green));
     color: var(--bg-color);
     box-shadow: 0 10px 20px rgba(82, 183, 136, 0.25);
+    border: 2px solid transparent;
     order: 3; /* Always last (right) */
 }
 
