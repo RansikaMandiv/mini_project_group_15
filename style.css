@@ -584,11 +584,11 @@ header p {
 }
 
 /* Default state with faint colors */
-.tag-option[data-value="Food"] { background: rgba(255, 159, 28, 0.1); color: #ff9f1c; border-color: rgba(255, 159, 28, 0.2); }
-.tag-option[data-value="Medicine"] { background: rgba(208, 0, 0, 0.1); color: #d00000; border-color: rgba(208, 0, 0, 0.2); }
-.tag-option[data-value="Industrial"] { background: rgba(63, 55, 201, 0.1); color: #3f37c9; border-color: rgba(63, 55, 201, 0.2); }
-.tag-option[data-value="Ornamental"] { background: rgba(247, 37, 133, 0.1); color: #f72585; border-color: rgba(247, 37, 133, 0.2); }
-.tag-option[data-value="Other"] { background: rgba(76, 201, 240, 0.1); color: #0077b6; border-color: rgba(76, 201, 240, 0.2); }
+.tag-option[data-value="Food"] { background: rgba(255, 159, 28, 0.1); color: #ffffff; border-color: rgba(255, 159, 28, 0.2); }
+.tag-option[data-value="Medicine"] { background: rgba(208, 0, 0, 0.1); color: #ffffff; border-color: rgba(208, 0, 0, 0.2); }
+.tag-option[data-value="Industrial"] { background: rgba(63, 55, 201, 0.1); color: #ffffff; border-color: rgba(63, 55, 201, 0.2); }
+.tag-option[data-value="Ornamental"] { background: rgba(247, 37, 133, 0.1); color: #ffffff; border-color: rgba(247, 37, 133, 0.2); }
+.tag-option[data-value="Other"] { background: rgba(76, 201, 240, 0.1); color: #ffffff; border-color: rgba(76, 201, 240, 0.2); }
 
 /* Glow on hover */
 .tag-option:hover {
