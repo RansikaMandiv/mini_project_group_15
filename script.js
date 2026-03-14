@@ -69,7 +69,7 @@ let rawPending = JSON.parse(localStorage.getItem('sl_pending_plants')) || [];
 let plants = rawPlants.filter(p => p !== null && typeof p === 'object');
 let pendingPlants = rawPending.filter(p => p !== null && typeof p === 'object');
 
-let isAdmin = false;
+let isAdmin = localStorage.getItem('sl_isAdmin') === 'true';
 
 const searchInput = document.getElementById('searchInput');
 const plantsContainer = document.getElementById('plantsContainer');
@@ -84,6 +84,24 @@ const addPlantForm = document.getElementById('addPlantForm');
 const plantSuggestions = document.getElementById('plantSuggestions');
 const newNameInput = document.getElementById('newName');
 const mainContainer = document.querySelector('.container');
+
+// Role Management Logic
+function updateAdminState() {
+    if (isAdmin) {
+        adminPanel.style.display = "block";
+        adminLoginBtn.style.display = "none";
+        logoutBtn.style.display = "flex";
+        updateAdminUI();
+    } else {
+        adminPanel.style.display = "none";
+        adminLoginBtn.style.display = "flex";
+        logoutBtn.style.display = "none";
+    }
+    localStorage.setItem('sl_isAdmin', isAdmin);
+}
+
+// Initial check for Admin state
+updateAdminState();
 
 // Toast Notification System
 const toastContainer = document.createElement('div');
@@ -116,6 +134,81 @@ function showToast(message, type = 'success') {
     }, 4000);
 }
 
+// Custom Dialog System
+function showConfirm(message, callback) {
+    const overlay = document.createElement('div');
+    overlay.className = 'dialog-overlay';
+    
+    overlay.innerHTML = `
+        <div class="dialog-box">
+            <h3>Confirmation</h3>
+            <p>${message}</p>
+            <div class="dialog-buttons">
+                <button class="dialog-btn cancel">Cancel</button>
+                <button class="dialog-btn confirm">Confirm</button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(overlay);
+    
+    const confirmBtn = overlay.querySelector('.confirm');
+    const cancelBtn = overlay.querySelector('.cancel');
+    
+    confirmBtn.onclick = () => {
+        document.body.removeChild(overlay);
+        if (callback) callback(true);
+    };
+    
+    cancelBtn.onclick = () => {
+        document.body.removeChild(overlay);
+        if (callback) callback(false);
+    };
+}
+
+function showPrompt(message, callback) {
+    const overlay = document.createElement('div');
+    overlay.className = 'dialog-overlay';
+    
+    overlay.innerHTML = `
+        <div class="dialog-box">
+            <h3>Admin Access</h3>
+            <p>${message}</p>
+            <input type="password" id="dialogInput" class="dialog-input" placeholder="Password" autofocus>
+            <div class="dialog-buttons">
+                <button class="dialog-btn cancel">Cancel</button>
+                <button class="dialog-btn confirm">Login</button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(overlay);
+    
+    const input = overlay.querySelector('#dialogInput');
+    const confirmBtn = overlay.querySelector('.confirm');
+    const cancelBtn = overlay.querySelector('.cancel');
+    
+    const handleConfirm = () => {
+        const value = input.value;
+        document.body.removeChild(overlay);
+        if (callback) callback(value);
+    };
+
+    confirmBtn.onclick = handleConfirm;
+    
+    input.onkeydown = (e) => {
+        if (e.key === 'Enter') handleConfirm();
+        if (e.key === 'Escape') document.body.removeChild(overlay);
+    };
+    
+    cancelBtn.onclick = () => {
+        document.body.removeChild(overlay);
+        if (callback) callback(null);
+    };
+    
+    input.focus();
+}
+
 function saveToLocalStorage() {
     // Keep data sanitized before saving
     plants = plants.filter(p => p !== null);
@@ -129,26 +222,25 @@ function saveToLocalStorage() {
 
 // Role Management
 adminLoginBtn.onclick = () => {
-    const password = prompt("Enter Admin Password:");
-    if (password === null) return; // User clicked Cancel
-    
-    if (password === "admin123") {
-        isAdmin = true;
-        adminPanel.style.display = "block";
-        adminLoginBtn.style.display = "none";
-        updateAdminUI();
-        showToast("Logged in as Admin", "success");
-    } else {
-        showToast("Incorrect password!", "error");
-    }
+    showPrompt("Enter Admin Password:", (password) => {
+        if (password === null) return;
+        
+        if (password === "admin123") {
+            isAdmin = true;
+            updateAdminState();
+            showToast("Logged in as Admin", "success");
+        } else {
+            showToast("Incorrect password!", "error");
+        }
+    });
 };
 
 logoutBtn.onclick = () => {
     isAdmin = false;
-    adminPanel.style.display = "none";
-    adminLoginBtn.style.display = "block";
+    updateAdminState();
     showToast("Logged out from Admin Portal", "info");
 };
+
 
 // Tab Logic
 const tabBtns = document.querySelectorAll('.tab-btn');
@@ -236,23 +328,27 @@ window.approveRequest = (index) => {
 window.rejectRequest = (index) => {
     const plant = pendingPlants[index];
     if (!plant) return;
-    if (confirm(`Are you sure you want to reject this request for ${plant.name}?`)) {
-        pendingPlants.splice(index, 1);
-        saveToLocalStorage();
-        showToast("Request rejected.", "info");
-    }
+    showConfirm(`Are you sure you want to reject this request for ${plant.name}?`, (confirmed) => {
+        if (confirmed) {
+            pendingPlants.splice(index, 1);
+            saveToLocalStorage();
+            showToast("Request rejected.", "info");
+        }
+    });
 };
 
 window.deletePlant = (index) => {
     const plant = plants[index];
     if (!plant) return;
-    if (confirm(`Are you sure you want to delete ${plant.name}?`)) {
-        const name = plant.name;
-        plants.splice(index, 1);
-        saveToLocalStorage();
-        displayPlants(plants);
-        showToast(`${name} deleted from database.`, "info");
-    }
+    showConfirm(`Are you sure you want to delete ${plant.name}?`, (confirmed) => {
+        if (confirmed) {
+            const name = plant.name;
+            plants.splice(index, 1);
+            saveToLocalStorage();
+            displayPlants(plants);
+            showToast(`${name} deleted from database.`, "info");
+        }
+    });
 };
 
 // Add Plant Logic
@@ -284,14 +380,14 @@ addPlantForm.addEventListener('submit', (e) => {
 
         if (isAdmin) {
             if (existingIndex !== -1) {
-                if (confirm(`A plant with this name already exists. Do you want to update its information?`)) {
-                    plants[existingIndex] = newPlant;
-                    saveToLocalStorage();
-                    displayPlants(plants, name);
-                    showToast("Plant information updated by Admin.", "success");
-                } else {
-                    return;
-                }
+                showConfirm(`A plant with this name already exists. Do you want to update its information?`, (confirmed) => {
+                    if (confirmed) {
+                        plants[existingIndex] = newPlant;
+                        saveToLocalStorage();
+                        displayPlants(plants, name);
+                        showToast("Plant information updated by Admin.", "success");
+                    }
+                });
             } else {
                 plants.push(newPlant);
                 saveToLocalStorage();
@@ -315,6 +411,7 @@ addPlantForm.addEventListener('submit', (e) => {
         showToast("Error: " + error.message, "error");
     }
 });
+
 
 function clearPlants(callback) {
     const cards = plantsContainer.querySelectorAll('.plant-card, .no-results');
@@ -481,10 +578,12 @@ const discardBtn = document.getElementById('discardBtn');
 
 // Discard logic
 discardBtn.onclick = () => {
-    if (confirm('Are you sure you want to discard your changes? This will clear all fields.')) {
-        addPlantForm.reset();
-        setSelectedTags([]); // Clear tag selections
-    }
+    showConfirm('Are you sure you want to discard your changes? This will clear all fields.', (confirmed) => {
+        if (confirmed) {
+            addPlantForm.reset();
+            setSelectedTags([]); // Clear tag selections
+        }
+    });
 };
 
 function updateSuggestions() {
