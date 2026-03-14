@@ -301,6 +301,7 @@ header p {
     margin-bottom: 60px;
     border: 2px solid var(--light-green);
     animation: fadeIn 0.5s ease;
+    position: relative;
 }
 
 .admin-header {
@@ -309,6 +310,44 @@ header p {
     align-items: center;
     margin-bottom: 30px;
 }
+
+.logout-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: white;
+    border: 2px solid #ffa8a8;
+    padding: 8px 16px;
+    border-radius: 12px;
+    color: #e03131;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(224, 49, 49, 0.08);
+    z-index: 2000;
+}
+
+.logout-btn:hover {
+    transform: translateY(-2px);
+    background: #fff5f5;
+    box-shadow: 0 6px 16px rgba(224, 49, 49, 0.15);
+    border-color: #ff8787;
+}
+
+.logout-btn svg {
+    stroke: #e03131;
+}
+
+.logout-btn span {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+
 
 .admin-tabs {
     display: flex;
