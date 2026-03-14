@@ -62,8 +62,13 @@ const defaultPlants = [
 ];
 
 // Load plants and pending requests from localStorage or use defaults
-let plants = JSON.parse(localStorage.getItem('sl_plants')) || defaultPlants;
-let pendingPlants = JSON.parse(localStorage.getItem('sl_pending_plants')) || [];
+let rawPlants = JSON.parse(localStorage.getItem('sl_plants')) || defaultPlants;
+let rawPending = JSON.parse(localStorage.getItem('sl_pending_plants')) || [];
+
+// Sanitize data: remove any null/undefined entries that might have corrupted the storage
+let plants = rawPlants.filter(p => p !== null && typeof p === 'object');
+let pendingPlants = rawPending.filter(p => p !== null && typeof p === 'object');
+
 let isAdmin = false;
 
 const searchInput = document.getElementById('searchInput');
@@ -80,7 +85,42 @@ const plantSuggestions = document.getElementById('plantSuggestions');
 const newNameInput = document.getElementById('newName');
 const mainContainer = document.querySelector('.container');
 
+// Toast Notification System
+const toastContainer = document.createElement('div');
+toastContainer.id = 'toast-container';
+document.body.appendChild(toastContainer);
+
+function showToast(message, type = 'success') {
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    
+    let icon = '🌿';
+    if (type === 'success') icon = '✅';
+    if (type === 'error') icon = '❌';
+    if (type === 'info') icon = 'ℹ️';
+
+    toast.innerHTML = `
+        <span class="toast-icon">${icon}</span>
+        <span class="toast-message">${message}</span>
+    `;
+    
+    toastContainer.appendChild(toast);
+    
+    // Animate in
+    setTimeout(() => toast.classList.add('show'), 100);
+    
+    // Remove after 4 seconds
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 500);
+    }, 4000);
+}
+
 function saveToLocalStorage() {
+    // Keep data sanitized before saving
+    plants = plants.filter(p => p !== null);
+    pendingPlants = pendingPlants.filter(p => p !== null);
+    
     localStorage.setItem('sl_plants', JSON.stringify(plants));
     localStorage.setItem('sl_pending_plants', JSON.stringify(pendingPlants));
     updateSuggestions();
@@ -97,9 +137,9 @@ adminLoginBtn.onclick = () => {
         adminPanel.style.display = "block";
         adminLoginBtn.style.display = "none";
         updateAdminUI();
-        alert("Logged in as Admin");
+        showToast("Logged in as Admin", "success");
     } else {
-        alert("Incorrect password!");
+        showToast("Incorrect password!", "error");
     }
 };
 
@@ -107,7 +147,7 @@ logoutBtn.onclick = () => {
     isAdmin = false;
     adminPanel.style.display = "none";
     adminLoginBtn.style.display = "block";
-    alert("Logged out from Admin Portal");
+    showToast("Logged out from Admin Portal", "info");
 };
 
 // Tab Logic
@@ -137,6 +177,7 @@ function updateAdminUI() {
         pendingContainer.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted);">No pending requests.</p>';
     } else {
         pendingPlants.forEach((plant, index) => {
+            if (!plant) return;
             const card = document.createElement('div');
             card.className = 'request-card';
             card.innerHTML = `
@@ -156,6 +197,7 @@ function updateAdminUI() {
     const manageContainer = document.getElementById('manageContainer');
     manageContainer.innerHTML = '';
     plants.forEach((plant, index) => {
+        if (!plant) return;
         const item = document.createElement('div');
         item.className = 'manage-item';
         item.innerHTML = `
@@ -168,73 +210,96 @@ function updateAdminUI() {
 
 window.approveRequest = (index) => {
     const plant = pendingPlants[index];
+    if (!plant) return;
     plants.push(plant);
     pendingPlants.splice(index, 1);
     saveToLocalStorage();
     displayPlants(plants);
-    alert(`${plant.name} approved and added to database.`);
+    showToast(`${plant.name} approved and added to database.`, "success");
 };
 
 window.rejectRequest = (index) => {
-    if (confirm("Are you sure you want to reject this request?")) {
+    const plant = pendingPlants[index];
+    if (!plant) return;
+    if (confirm(`Are you sure you want to reject this request for ${plant.name}?`)) {
         pendingPlants.splice(index, 1);
         saveToLocalStorage();
+        showToast("Request rejected.", "info");
     }
 };
 
 window.deletePlant = (index) => {
-    if (confirm(`Are you sure you want to delete ${plants[index].name}?`)) {
+    const plant = plants[index];
+    if (!plant) return;
+    if (confirm(`Are you sure you want to delete ${plant.name}?`)) {
+        const name = plant.name;
         plants.splice(index, 1);
         saveToLocalStorage();
         displayPlants(plants);
+        showToast(`${name} deleted from database.`, "info");
     }
 };
 
 // Add Plant Logic
-addPlantForm.onsubmit = (e) => {
+function getSelectedTags() {
+    return Array.from(document.querySelectorAll('.tag-option.selected'))
+                .map(option => option.getAttribute('data-value'));
+}
+
+addPlantForm.addEventListener('submit', (e) => {
     e.preventDefault();
     
-    const name = document.getElementById('newName').value.trim();
-    const scientific = document.getElementById('newScientific').value.trim();
-    const uses = document.getElementById('newUses').value.trim();
-    const selectedTags = getSelectedTags();
+    try {
+        const name = document.getElementById('newName').value.trim();
+        const scientific = document.getElementById('newScientific').value.trim();
+        const uses = document.getElementById('newUses').value.trim();
+        const selectedTags = getSelectedTags();
 
-    // Check if plant already exists in main database
-    const existingIndex = plants.findIndex(p => 
-        p.name.toLowerCase() === name.toLowerCase() || 
-        p.scientific.toLowerCase() === scientific.toLowerCase()
-    );
+        if (!name || !scientific || !uses) {
+            showToast("Please fill in all required fields.", "error");
+            return;
+        }
 
-    const newPlant = { name, scientific, uses, tags: selectedTags };
+        const existingIndex = plants.findIndex(p => 
+            p && (p.name.toLowerCase() === name.toLowerCase() || 
+            p.scientific.toLowerCase() === scientific.toLowerCase())
+        );
 
-    if (isAdmin) {
-        if (existingIndex !== -1) {
-            if (confirm(`A plant with this name already exists. Do you want to update its information?`)) {
-                plants[existingIndex] = newPlant;
+        const newPlant = { name, scientific, uses, tags: selectedTags };
+
+        if (isAdmin) {
+            if (existingIndex !== -1) {
+                if (confirm(`A plant with this name already exists. Do you want to update its information?`)) {
+                    plants[existingIndex] = newPlant;
+                    saveToLocalStorage();
+                    displayPlants(plants, name);
+                    showToast("Plant information updated by Admin.", "success");
+                } else {
+                    return;
+                }
+            } else {
+                plants.push(newPlant);
                 saveToLocalStorage();
                 displayPlants(plants, name);
-                alert("Plant information updated by Admin.");
-            } else {
-                return;
+                showToast("New plant added directly by Admin.", "success");
             }
         } else {
-            plants.push(newPlant);
+            // Guest submission
+            pendingPlants.push(newPlant);
             saveToLocalStorage();
-            displayPlants(plants, name);
-            alert("New plant added directly by Admin.");
+            showToast("Thank you! Your suggestion has been sent for approval. 🌱", "success");
         }
-    } else {
-        // Guest submission
-        pendingPlants.push(newPlant);
-        saveToLocalStorage();
-        alert("Thank you! Your suggestion has been sent to the Admin for approval. 🌱");
+        
+        // Success: Close and Reset
+        addModal.style.display = "none";
+        document.body.classList.remove('modal-open');
+        addPlantForm.reset();
+        setSelectedTags([]);
+    } catch (error) {
+        console.error("Error saving plant:", error);
+        showToast("Error: " + error.message, "error");
     }
-    
-    addModal.style.display = "none";
-    document.body.classList.remove('modal-open');
-    addPlantForm.reset();
-    setSelectedTags([]);
-};
+});
 
 function clearPlants(callback) {
     const cards = plantsContainer.querySelectorAll('.plant-card, .no-results');
@@ -263,6 +328,7 @@ function displayPlants(filteredPlants, highlightName = null) {
         }
 
         filteredPlants.forEach(plant => {
+            if (!plant) return;
             const card = document.createElement('div');
             card.className = 'plant-card';
             if (highlightName && plant.name === highlightName) {
@@ -320,8 +386,8 @@ function handleSearch() {
     }
     
     const filtered = plants.filter(plant => {
-        return plant.name.toLowerCase().includes(query) || 
-               plant.scientific.toLowerCase().includes(query);
+        return plant && (plant.name.toLowerCase().includes(query) || 
+               plant.scientific.toLowerCase().includes(query));
     });
     
     displayPlants(filtered);
@@ -410,6 +476,7 @@ function updateSuggestions() {
     if (!plantSuggestions) return;
     plantSuggestions.innerHTML = '';
     plants.forEach(plant => {
+        if (!plant) return;
         const option = document.createElement('option');
         option.value = plant.name;
         plantSuggestions.appendChild(option);
@@ -419,7 +486,7 @@ function updateSuggestions() {
 // Auto-fill logic when selecting an existing plant
 newNameInput.addEventListener('input', (e) => {
     const selectedName = e.target.value;
-    const existingPlant = plants.find(p => p.name === selectedName);
+    const existingPlant = plants.find(p => p && p.name === selectedName);
     
     if (existingPlant) {
         document.getElementById('newScientific').value = existingPlant.scientific;

@@ -748,3 +748,62 @@ footer {
     .plant-card { padding: 30px; }
     .plants-grid { grid-template-columns: 1fr; }
 }
+
+/* Toast Notification */
+#toast-container {
+    position: fixed;
+    top: 30px;
+    left: 0;
+    right: 0;
+    z-index: 3000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    pointer-events: none;
+}
+
+.toast {
+    background: white;
+    border: 2px solid var(--light-green);
+    color: var(--text-main);
+    padding: 16px 28px;
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(27, 67, 50, 0.15);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    min-width: 320px;
+    max-width: 90%;
+    transform: translateY(-100px);
+    opacity: 0;
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    font-weight: 700;
+    pointer-events: auto;
+}
+
+.toast.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.toast.success {
+    border-color: #40916c;
+    background: #f0fdf4;
+}
+
+.toast.error {
+    border-color: #e76f51;
+    background: #fff5f2;
+}
+
+.toast.info {
+    border-color: #34a0a4;
+    background: #f0f9fa;
+}
+
+.toast-icon {
+    font-size: 1.6rem;
+}
+
+
