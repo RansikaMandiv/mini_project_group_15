@@ -1,12 +1,12 @@
-1. when a user search for a specific plant it must be filtered from available plant database using only the name and scientific names
+1. when a user search for a specific plant it must be filtered from available plant database using only the name and scientific names.
 2. add a tag near the scientific name in different colors according to use case like (Food,Mdicine,etc..) and allow users to add tags when they add new plants to the database
-3. when user tries to add a currently added medicine if there are edits in it allow it
-4. save changes button wont work when adding new plants
+3. when user tries to add an already added medicine and if there are eany changes in it, allow it
+4. save changes button won't work when adding new plants
 5. use transparent color tags
 6. change the color of text inside the plant tags to a lighter dark gray
 7. add unique colors to different colors
 8. for every plants the primary uses para should be limited to 5 lines and to expand full paragraph add a drop dowm left alligned to primary uses linefor every plants the primary uses para should be limited to 5 lines and to expand full paragraph add a drop down right alligned to primary uses line
-9. add the read more button after ther the end of para
+9. add the read more button after the end of para
 10. change the primary "uses" topics color to a matching color in the designchange the "Primary uses" topics color to a matching color in the design
 11. use black instead of that color
 12. change bold to font weight medium
