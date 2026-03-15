@@ -57,6 +57,9 @@
             </div>
 
             <div id="manageTab" class="tab-content">
+                <div class="admin-search-box">
+                    <input type="text" id="adminManageSearch" placeholder="Search plants to delete..." class="admin-inner-search">
+                </div>
                 <div id="manageContainer" class="admin-manage-list">
                     <!-- Existing plants with delete buttons will be injected here -->
                 </div>
@@ -103,6 +106,8 @@
         <main id="plantsContainer" class="plants-grid">
             <!-- Plant cards will be injected here by JS -->
         </main>
+
+        <div id="pagination" class="pagination-container"></div>
 
         <footer>
             <p>&copy; 2026 Sri Lankan Flora Guide - Local Search Application</p>

@@ -413,6 +413,30 @@ header p {
     gap: 10px;
 }
 
+.admin-search-box {
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.admin-inner-search {
+    width: 100%;
+    padding: 12px 20px;
+    background: rgba(8, 28, 21, 0.6);
+    border: 2px solid var(--light-green);
+    border-radius: 12px;
+    color: var(--text-main);
+    font-size: 0.95rem;
+    outline: none;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.admin-inner-search:focus {
+    border-color: var(--mid-green);
+    background: rgba(8, 28, 21, 0.9);
+    box-shadow: 0 4px 12px rgba(82, 183, 136, 0.1);
+}
+
 .manage-item {
     display: flex;
     justify-content: space-between;
@@ -801,6 +825,44 @@ header p {
 .form-group textarea {
     resize: vertical;
     min-height: 80px;
+}
+
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin: 40px 0;
+    padding: 20px;
+    width: 100%;
+}
+
+.page-btn {
+    background: var(--glass-bg);
+    border: 1px solid var(--light-green);
+    color: var(--text-muted);
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.page-btn:hover {
+    background: rgba(82, 183, 136, 0.1);
+    border-color: var(--mid-green);
+    transform: translateY(-2px);
+}
+
+.page-btn.active {
+    background: var(--primary-green);
+    color: var(--bg-color);
+    border-color: var(--primary-green);
+    box-shadow: 0 5px 15px rgba(82, 183, 136, 0.3);
 }
 
 footer {

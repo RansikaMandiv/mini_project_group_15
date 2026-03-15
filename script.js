@@ -635,8 +635,13 @@ let pendingPlants = rawPending.filter(p => p !== null && typeof p === 'object');
 
 let isAdmin = localStorage.getItem('sl_isAdmin') === 'true';
 
+const PLANTS_PER_PAGE = 21;
+let currentPage = 1;
+let currentFilteredPlants = [];
+
 const searchInput = document.getElementById('searchInput');
 const plantsContainer = document.getElementById('plantsContainer');
+const paginationContainer = document.getElementById('pagination');
 const addModal = document.getElementById('addModal');
 const addPlantBtn = document.getElementById('addPlantBtn');
 const viewAllBtn = document.getElementById('viewAllBtn');
@@ -820,7 +825,7 @@ tabBtns.forEach(btn => {
     };
 });
 
-function updateAdminUI() {
+function updateAdminUI(manageFilter = '') {
     if (!isAdmin) return;
 
     // Update Pending Tab
@@ -852,8 +857,17 @@ function updateAdminUI() {
     // Update Manage Tab
     const manageContainer = document.getElementById('manageContainer');
     manageContainer.innerHTML = '';
+    
+    const query = manageFilter.toLowerCase().trim();
+    
     plants.forEach((plant, index) => {
         if (!plant) return;
+        
+        const matches = plant.name.toLowerCase().includes(query) || 
+                        plant.scientific.toLowerCase().includes(query);
+                        
+        if (!matches && query !== '') return;
+
         const item = document.createElement('div');
         item.className = 'manage-item';
         item.innerHTML = `
@@ -863,6 +877,13 @@ function updateAdminUI() {
         manageContainer.appendChild(item);
     });
 }
+
+// Event listener for admin search
+document.addEventListener('input', (e) => {
+    if (e.target.id === 'adminManageSearch') {
+        updateAdminUI(e.target.value);
+    }
+});
 
 window.approveRequest = (index) => {
     const newPlant = pendingPlants[index];
@@ -993,17 +1014,42 @@ function clearPlants(callback) {
     }, 300);
 }
 
+function renderPagination(totalPlants) {
+    paginationContainer.innerHTML = '';
+    const totalPages = Math.ceil(totalPlants / PLANTS_PER_PAGE);
+
+    if (totalPages <= 1) return;
+
+    for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement('button');
+        btn.innerText = i;
+        btn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
+        btn.onclick = () => {
+            currentPage = i;
+            displayPlants(currentFilteredPlants);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+        paginationContainer.appendChild(btn);
+    }
+}
+
 function displayPlants(filteredPlants, highlightName = null) {
+    currentFilteredPlants = filteredPlants;
     // Switch from hero mode to top mode
     mainContainer.classList.remove('hero-mode');
 
     const render = () => {
         if (filteredPlants.length === 0) {
             plantsContainer.innerHTML = '<div class="no-results">No plants found matching your search.</div>';
+            paginationContainer.innerHTML = '';
             return;
         }
 
-        filteredPlants.forEach(plant => {
+        const start = (currentPage - 1) * PLANTS_PER_PAGE;
+        const end = start + PLANTS_PER_PAGE;
+        const pagePlants = filteredPlants.slice(start, end);
+
+        pagePlants.forEach(plant => {
             if (!plant) return;
             const card = document.createElement('div');
             card.className = 'plant-card';
@@ -1060,6 +1106,8 @@ function displayPlants(filteredPlants, highlightName = null) {
                 card.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
         });
+
+        renderPagination(filteredPlants.length);
     };
 
     if (plantsContainer.children.length > 0) {
@@ -1075,6 +1123,7 @@ function handleSearch() {
     if (query === '') {
         clearPlants(() => {
             mainContainer.classList.add('hero-mode');
+            paginationContainer.innerHTML = '';
         });
         return;
     }
@@ -1084,6 +1133,7 @@ function handleSearch() {
                plant.scientific.toLowerCase().includes(query));
     });
     
+    currentPage = 1; // Reset to page 1 on search
     displayPlants(filtered);
 }
 
@@ -1095,12 +1145,14 @@ viewAllBtn.onclick = () => {
     
     if (isShowingAll) {
         searchInput.value = '';
+        currentPage = 1; // Reset to page 1
         displayPlants(plants);
         viewAllBtn.innerText = 'Hide All';
     } else {
         clearPlants(() => {
             mainContainer.classList.add('hero-mode');
             viewAllBtn.innerText = 'View All';
+            paginationContainer.innerHTML = '';
         });
     }
 };
