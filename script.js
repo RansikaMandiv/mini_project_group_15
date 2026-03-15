@@ -1016,6 +1016,12 @@ function displayPlants(filteredPlants, highlightName = null) {
             ).join('');
 
             card.innerHTML = `
+                <button class="copy-btn" title="Copy plant details">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                </button>
                 <h2>${plant.name}</h2>
                 <div class="scientific-name">${plant.scientific}</div>
                 <div class="tags-container">${tagsHtml}</div>
@@ -1023,6 +1029,18 @@ function displayPlants(filteredPlants, highlightName = null) {
                 <div class="uses-content">${plant.uses}</div>
                 <button class="expand-btn">Read More</button>
             `;
+
+            // Setup copy functionality
+            const copyBtn = card.querySelector('.copy-btn');
+            copyBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const textToCopy = `${plant.name} (${plant.scientific})`;
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    showToast(`Copied: ${textToCopy}`, "success");
+                }).catch(err => {
+                    showToast("Failed to copy text", "error");
+                });
+            });
 
             const expandBtn = card.querySelector('.expand-btn');
             const usesContent = card.querySelector('.uses-content');
